@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import PhotoGrid from "./PhotoGrid";
 import SearchBar from "./SearchBar";
+import {favReducer} from "../reducer/favreducer.js"
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 
 export default function PhotoCard() {
@@ -9,6 +11,17 @@ export default function PhotoCard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState("")
+    const [favorites, dispatch] = useReducer(favReducer, [],
+            () => {
+                const saved = localStorage.getItem("favorites");
+                return saved ? JSON.parse(saved) : [];
+            }
+        )
+
+        useEffect(() => {
+            console.log("Favorites changed:", favorites);
+            localStorage.setItem("favorites", JSON.stringify(favorites))
+        }, [favorites])
 
     useEffect(() =>{
         const fetchImage = async () => {
@@ -37,9 +50,26 @@ export default function PhotoCard() {
         img.author.toLowerCase().includes(search.toLowerCase())
     )
 
+
+
+    const toggleFavorite = (img) => {
+        dispatch({
+            type: "TOGGLE_FAV",
+            payload: img,
+        })
+    }
+
+    const isFav = (id) => {
+        return favorites.some((img) => img.id === id)
+    }
+
     return (
         <>
             <div className="bg-white">
+
+            <p className="text-center mb-4 font-semibold">
+                Favorites: {favorites.length}
+            </p>
 
                 <SearchBar search={search} setSearch={setSearch} />
 
@@ -60,7 +90,13 @@ export default function PhotoCard() {
                         {!loading && !error && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {filteredImages.map((img) =>(
-                                <div key={img.id} className="bg-white rounded-lg p-2">
+                                <div key={img.id} className="bg-white rounded-lg p-2 relative">
+                                    <button 
+                                        onClick={() => toggleFavorite(img)}
+                                        className="absolute top-3 right-3 text-2xl">
+                                        
+                                        {isFav(img.id) ? <FaHeart color="red"/> : <FaRegHeart color="white"/>}
+                                    </button>
                                     <img 
                                         className="w-full h-60 object-cover rounded"
                                         src={img.download_url}
