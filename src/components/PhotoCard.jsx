@@ -59,9 +59,13 @@ export default function PhotoCard() {
         })
     }
 
-    const isFav = (id) => {
-        return favorites.some((img) => img.id === id)
-    }
+    // const isFav = (id) => {
+    //     return favorites.some((img) => img.id === id)
+    // }
+
+    const favIds = new Set(favorites.map(f => f.id))
+
+    const isFav = (id) => favIds.has(id)
 
     return (
         <>
