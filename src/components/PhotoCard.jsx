@@ -1,15 +1,13 @@
 import { useEffect, useState, useReducer } from "react";
-import PhotoGrid from "./PhotoGrid";
 import SearchBar from "./SearchBar";
 import {favReducer} from "../reducer/favreducer.js"
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import useFetchPhotos from "../hooks/useFetchPhotos.js"
 
 
 export default function PhotoCard() {
 
-    const [images, setimages] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { photos, loading, error } = useFetchPhotos();
     const [search, setSearch] = useState("")
     const [favorites, dispatch] = useReducer(favReducer, [],
             () => {
@@ -23,30 +21,7 @@ export default function PhotoCard() {
             localStorage.setItem("favorites", JSON.stringify(favorites))
         }, [favorites])
 
-    useEffect(() =>{
-        const fetchImage = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                const res = await fetch("https://picsum.photos/v2/list?limit=30");
-
-                if(!res.ok){
-                    throw new Error(`Failed to fetch images, status: ${res.status}`);
-                }
-
-                const result = await res.json();
-                setimages(result);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchImage();
-    }, []);
-
-    const filteredImages = images.filter((img) => 
+    const filteredImages = photos.filter((img) => 
         img.author.toLowerCase().includes(search.toLowerCase())
     )
 
