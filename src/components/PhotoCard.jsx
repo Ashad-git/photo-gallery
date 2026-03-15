@@ -35,9 +35,6 @@ export default function PhotoCard() {
         })
     }
 
-    // const isFav = (id) => {
-    //     return favorites.some((img) => img.id === id)
-    // }
 
     const favIds = new Set(favorites.map(f => f.id))
 
@@ -60,7 +57,7 @@ export default function PhotoCard() {
                     <div>
                         {/* Loading Spinner */}
                         {loading && (
-                            <div className="flex justify-center">
+                            <div className="flex justify-center items-center h-40">
                                 <div className="h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                             </div>
                         )}
@@ -74,7 +71,7 @@ export default function PhotoCard() {
                         {!loading && !error && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {filteredImages.map((img) =>(
-                                <div key={img.id} className="g-white rounded-xl shadow-md overflow-hidden relative group hover:shadow-xl transition duration-300">
+                                <div key={img.id} className="bg-white rounded-xl shadow-md overflow-hidden relative group hover:shadow-xl transition duration-300">
                                     <button 
                                         onClick={() => toggleFavorite(img)}
                                         className="absolute top-3 right-3 text-2xl bg-white/80 backdrop-blur p-2 rounded-full shadow hover:scale-110 transition">
@@ -82,11 +79,11 @@ export default function PhotoCard() {
                                         {isFav(img.id) ? <FaHeart color="red"/> : <FaRegHeart color="white"/>}
                                     </button>
                                     <img 
-                                        className="w-full h-60 object-cover transition-transform duration-300 group-hover:scale-105"
+                                        className="w-full h-60 object-cover"
                                         src={img.download_url}
                                         alt={img.author}
                                     />
-                                    <p className="text-base mt-2 text-center font-medium">{img.author}</p>
+                                    <p className="text-sm text-gray-700 text-center py-3 font-medium">{img.author}</p>
                                 </div>
                             ))}
                         </div>
