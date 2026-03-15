@@ -1,5 +1,5 @@
 import PhotoCard from "./components/PhotoCard";
-import PhotoGrid from "./components/PhotoGrid";
+
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState, useReducer } from "react";
+import { useEffect, useState, useReducer, useCallback, useMemo } from "react";
 import SearchBar from "./SearchBar";
 import {favReducer} from "../reducer/favreducer.js"
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -21,10 +21,11 @@ export default function PhotoCard() {
             localStorage.setItem("favorites", JSON.stringify(favorites))
         }, [favorites])
 
-    const filteredImages = photos.filter((img) => 
-        img.author.toLowerCase().includes(search.toLowerCase())
-    )
-
+    const filteredImages = useMemo(() => {
+           return  photos.filter((img) => 
+                img.author.toLowerCase().includes(search.toLowerCase())
+        )
+    }, [photos, search])
 
 
     const toggleFavorite = (img) => {
@@ -42,6 +43,10 @@ export default function PhotoCard() {
 
     const isFav = (id) => favIds.has(id)
 
+    const handleSearch = useCallback((e) => {
+        setSearch(e.target.value)
+    }, [])
+
     return (
         <>
             <div className="bg-white">
@@ -50,7 +55,7 @@ export default function PhotoCard() {
                 Favorites: {favorites.length}
             </p>
 
-                <SearchBar search={search} setSearch={setSearch} />
+                <SearchBar search={search} onSearch={handleSearch} />
 
                     <div>
                         {/* Loading Spinner */}

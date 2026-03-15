@@ -1,6 +1,6 @@
 
 
-export default function SearchBar({ search, setSearch }) {
+export default function SearchBar({ search, onSearch }) {
     return (
         <>
             <div>
@@ -9,7 +9,7 @@ export default function SearchBar({ search, setSearch }) {
                     placeholder="Search by author..."
                     className="w-full mb-6 p-2 border rounded-lg"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={onSearch}
                 ></input>
             </div>
         </>
